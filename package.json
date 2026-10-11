@@ -1,0 +1,24 @@
+{
+  "name": "playwrightwithtypescript",
+  "version": "1.0.0",
+  "description": "This repository will be used to create a robust automation framework using Playwright with Type Script",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/root4321/PlayWrightWithTypeScript.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/root4321/PlayWrightWithTypeScript/issues"
+  },
+  "homepage": "https://github.com/root4321/PlayWrightWithTypeScript#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
+  }
+}
