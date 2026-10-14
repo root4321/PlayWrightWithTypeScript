@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "This repository will be used to create a robust automation framework using Playwright with Type Script",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:cucumber": "cucumber-js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/root4321/PlayWrightWithTypeScript.git"
@@ -17,8 +20,11 @@
   },
   "homepage": "https://github.com/root4321/PlayWrightWithTypeScript#readme",
   "devDependencies": {
+    "@cucumber/cucumber": "^13.3.0",
     "@playwright/test": "^1.64.0",
     "@types/node": "^26.6.5",
+    "cross-env": "^10.1.0",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
 }

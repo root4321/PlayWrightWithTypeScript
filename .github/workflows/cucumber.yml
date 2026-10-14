@@ -1,0 +1,53 @@
+name: Cucumber Tests
+
+# Manual only: no automatic run on push or pull request
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Cucumber tag to run'
+        required: true
+        type: choice
+        default: '@smoke'
+        options:
+          - '@smoke'
+          - '@regression'
+          - '@positive'
+          - '@negative'
+          - '@login'
+          - 'all'
+      custom_tags:
+        description: 'Optional custom tag expression, overrides the selection above (e.g. "@smoke and not @negative")'
+        required: false
+        type: string
+
+jobs:
+  cucumber:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run Cucumber tests
+        env:
+          SELECTED_TAGS: ${{ inputs.custom_tags != '' && inputs.custom_tags || inputs.tags }}
+        run: |
+          if [ "$SELECTED_TAGS" = "all" ]; then
+            npx cucumber-js
+          else
+            npx cucumber-js --tags "$SELECTED_TAGS"
+          fi
+      - name: Upload Cucumber report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-report
+          path: test-results/cucumber-report.html
+          retention-days: 30
