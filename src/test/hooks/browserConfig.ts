@@ -7,7 +7,7 @@ declare const process: { env: Record<string, string | undefined> };
 //
 // Supported browsers: chrome, chromium, firefox, webkit.
 // Edit DEFAULT_BROWSER to change the default, or override per run with the BROWSER env variable.
-const DEFAULT_BROWSER = 'webkit';
+const DEFAULT_BROWSER = 'chrome';
 const browserName = (process.env.BROWSER ?? DEFAULT_BROWSER).toLowerCase();
 
 const browsers: Record<string, { type: BrowserType; channel?: string }> = {

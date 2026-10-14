@@ -78,4 +78,5 @@ After test execution, a rich HTML report is automatically generated at:
 ```
 test-results/cucumber-report.html
 ```
-Open it in any browser to inspect step-by-step results and screenshots if any step fails.
+Open it in any browser to inspect step-by-step results and screenshots. On GitHub Actions it is in the
+`cucumber-report` artifact.
