@@ -21,6 +21,17 @@ on:
         required: false
         type: string
 
+      browser:
+        description: 'Browser to run the tests in'
+        required: true
+        type: choice
+        default: 'chrome'
+        options:
+          - chrome
+          - firefox
+          - webkit
+          - chromium
+
 jobs:
   cucumber:
     timeout-minutes: 60
@@ -33,10 +44,11 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps ${{ inputs.browser }}
       - name: Run Cucumber tests
         env:
+          BROWSER: ${{ inputs.browser }}
           SELECTED_TAGS: ${{ inputs.custom_tags != '' && inputs.custom_tags || inputs.tags }}
         run: |
           if [ "$SELECTED_TAGS" = "all" ]; then
