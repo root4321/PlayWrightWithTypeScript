@@ -1,6 +1,7 @@
 name: Cucumber Tests
 
-# Manual only: no automatic run on push or pull request
+# Manual only: no automatic run on push or pull request.
+# The branch is chosen with the "Use workflow from" dropdown in the Run workflow dialog.
 on:
   workflow_dispatch:
     inputs:
@@ -15,7 +16,18 @@ on:
           - '@positive'
           - '@negative'
           - '@login'
+          - '@sanity'
           - 'all'
+      browser:
+        description: 'Browser to run the tests in'
+        required: true
+        type: choice
+        default: 'chromium'
+        options:
+          - chromium
+          - chrome
+          - firefox
+          - webkit
       custom_tags:
         description: 'Optional custom tag expression, overrides the selection above (e.g. "@smoke and not @negative")'
         required: false
@@ -27,6 +39,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: Show run configuration
+        run: echo "Branch=${{ github.ref_name }} Browser=${{ inputs.browser }} Tags=${{ inputs.custom_tags != '' && inputs.custom_tags || inputs.tags }}"
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
@@ -34,9 +50,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: |
+          if [ "${{ inputs.browser }}" = "chrome" ]; then
+            npx playwright install --with-deps chrome
+          else
+            npx playwright install --with-deps ${{ inputs.browser }}
+          fi
       - name: Run Cucumber tests
         env:
+          BROWSER: ${{ inputs.browser }}
           SELECTED_TAGS: ${{ inputs.custom_tags != '' && inputs.custom_tags || inputs.tags }}
         run: |
           if [ "$SELECTED_TAGS" = "all" ]; then
