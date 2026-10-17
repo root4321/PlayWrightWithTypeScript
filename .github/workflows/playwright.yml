@@ -1,8 +1,14 @@
 name: Playwright Tests
 # Manual only: no automatic run on push or pull request.
-# The branch is chosen with the "Use workflow from" dropdown in the Run workflow dialog.
+# Keep "Use workflow from" on main (the workflow file lives there); pick the branch to test in the "branch" input.
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to run the tests from (e.g. develop, main)'
+        required: true
+        type: string
+        default: 'develop'
 jobs:
   test:
     timeout-minutes: 60
@@ -10,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        ref: ${{ github.ref }}
+        ref: ${{ inputs.branch }}
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
