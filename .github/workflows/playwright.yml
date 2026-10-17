@@ -1,15 +1,16 @@
 name: Playwright Tests
+# Manual only: no automatic run on push or pull request.
+# The branch is chosen with the "Use workflow from" dropdown in the Run workflow dialog.
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  workflow_dispatch:
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.ref }}
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
