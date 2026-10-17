@@ -25,6 +25,7 @@ This repository contains a robust automation framework using **Playwright with T
 │       └── dataUtils.ts           # Reusable JsonReader utility to load & extract test data
 ├── cucumber.json                  # Cucumber configuration and profiles
 ├── tsconfig.json                  # TypeScript compiler settings
+├── playwright.config.ts           # Playwright standard runner configuration
 └── package.json                   # Dependencies and npm test runner scripts
 ```
 
@@ -36,23 +37,13 @@ This repository contains a robust automation framework using **Playwright with T
 ```bash
 npm run test:cucumber
 ```
-Locally every browser (chrome, chromium, firefox, webkit) launches headed; Chrome is maximized and the
-others open at the default 1280x720 size. Only on GitHub Actions does it run headless. This is
+Locally the browser launches maximized in headed mode; on CI (`CI=true`) it runs headless. This is
 controlled globally in `src/test/hooks/browserConfig.ts`.
-
-### Choose the browser
-Supported: `chrome` (default), `firefox`, `webkit`, `chromium`. Set it per run with the `BROWSER`
-variable, or change `DEFAULT_BROWSER` in `src/test/hooks/browserConfig.ts`.
-```bash
-BROWSER=firefox npx cucumber-js --tags "@smoke"          # macOS / Linux
-npx cross-env BROWSER=webkit cucumber-js --tags "@smoke" # any OS, incl. Windows
-```
 
 ### Run on GitHub Actions
 The **Cucumber Tests** workflow (`.github/workflows/cucumber.yml`) runs manually only, never on push
-or pull request. Go to **Actions → Cucumber Tests → Run workflow**, pick a browser and a tag (or
-`all`, or enter a custom tag expression), then download the `cucumber-report` artifact
-from the finished run.
+or pull request. Go to **Actions → Cucumber Tests → Run workflow**, pick a tag (or `all`, or enter a
+custom tag expression), then download the `cucumber-report` artifact from the finished run.
 
 ### 2. Run by tag
 ```bash
@@ -78,5 +69,4 @@ After test execution, a rich HTML report is automatically generated at:
 ```
 test-results/cucumber-report.html
 ```
-Open it in any browser to inspect step-by-step results and screenshots. On GitHub Actions it is in the
-`cucumber-report` artifact.
+Open it in any browser to inspect step-by-step results and screenshots if any step fails.

@@ -1,4 +1,5 @@
 import { Before, After, AfterStep, setDefaultTimeout } from '@cucumber/cucumber';
+import { chromium } from 'playwright';
 import { CustomWorld } from './customWorld';
 import { browserConfig } from './browserConfig';
 import { LoginPage } from '../../pages/LoginPage';
@@ -21,22 +22,19 @@ async function maximizeWindow(world: CustomWorld): Promise<void> {
 Before(async function (this: CustomWorld) {
   const isHeaded = browserConfig.headed;
 
-  this.browser = await browserConfig.type.launch({
+  this.browser = await chromium.launch({
     headless: !isHeaded,
-    channel: browserConfig.channel,
     slowMo: isHeaded ? browserConfig.slowMo : 0,
-    args: browserConfig.maximize ? ['--window-position=0,0'] : [],
+    args: ['--window-position=0,0'],
   });
 
-  // Maximized Chrome follows its window (viewport null); other browsers use a fixed default size
-  let viewport: { width: number; height: number } | null = { width: 1280, height: 720 };
-  if (!isHeaded) viewport = { width: 1920, height: 1080 };
-  else if (browserConfig.maximize) viewport = null;
-
-  this.context = await this.browser.newContext({ viewport });
+  // viewport: null lets the page follow the maximized window; headless has no window, so use a large fixed size
+  this.context = await this.browser.newContext({
+    viewport: isHeaded ? null : { width: 1920, height: 1080 },
+  });
 
   this.page = await this.context.newPage();
-  if (isHeaded && browserConfig.maximize) await maximizeWindow(this);
+  if (isHeaded) await maximizeWindow(this);
   this.loginPage = new LoginPage(this.page);
   this.dashboardPage = new DashboardPage(this.page);
 });
