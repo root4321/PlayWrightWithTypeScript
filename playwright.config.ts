@@ -97,7 +97,7 @@ const config = ({
     headless: true,
     // ignoreHTTPSErrors: false,
   },
-  
+
 });
 
 export default config;

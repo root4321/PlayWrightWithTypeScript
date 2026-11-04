@@ -57,8 +57,6 @@ test.only('Page context playwright Test', async ({ page }) => {
       break;
     }
   }
-
-
   await page.locator('a:has-text("Place Order")').click();
   await page.waitForLoadState('networkidle');
   await page.locator('h1:has-text("Thankyou for the order.")').waitFor();
@@ -68,10 +66,12 @@ test.only('Page context playwright Test', async ({ page }) => {
   const orderID = await page.locator('label[class="ng-star-inserted"]').textContent();
   console.log(orderID);
   await page.locator('button[routerlink="/dashboard/myorders" ]').click();
-  // await page.pause();
+  await page.locator('tbody tr').first().waitFor(); 
   const orderRow = await page.locator('tbody tr');
-  console.log(orderRow);
+  console.log("Order Row Count:"+await orderRow.count());
+  
   for (let i = 0; i < await orderRow.count(); ++i) {
+    console.log("Checking order row:", await orderRow.nth(i).textContent());
     const rowOrderID = await orderRow.nth(i).locator('th').textContent();
     console.log(rowOrderID);
     if (orderID?.includes(rowOrderID ?? '')) {
@@ -80,10 +80,11 @@ test.only('Page context playwright Test', async ({ page }) => {
       break;
     }
   }
+  
   await page.locator('div[class="col-text -main"]').waitFor();
   const orderIDmatch = await page.locator('div[class="col-text -main"]').textContent();
   expect(orderID?.includes(orderIDmatch ?? '')).toBeTruthy();
   console.log("OrderID match:", orderIDmatch);
-  // await page.pause();
+  
 
 });
