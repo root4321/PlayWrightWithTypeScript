@@ -1,8 +1,8 @@
 {
   "positiveUser": {
     "url": "https://rahulshettyacademy.com/client/#/auth/login",
-    "userEmail": "vinittyagi91@hotmail.com",
-    "userPassword": "ZVz4.s*2hA.uHA6",
+    "userEmail": "vinittyagi09@hotmail.com",
+    "userPassword": "passpasswordword",
     "expectedUrlPart": "/dashboard/dash",
     "expectedIndicator": "HOME"
   },
